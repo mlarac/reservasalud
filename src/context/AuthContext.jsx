@@ -1,6 +1,9 @@
-import {createContext, useState} from 'react';
+import {createContext, useState, useContext} from 'react';
 
 const AuthContext = createContext();
+
+// Hook para consumir el contexto en otros componentes
+export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
@@ -10,7 +13,7 @@ const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(null);
 
   const login = async (rut, password) => {
-    // Simulated login API call
+    // Simulacion login API call
     if (rut === '12345678-9' && password === 'password') {
       setToken('abc123');
       setRut('12345678-9');
@@ -43,6 +46,11 @@ const AuthProvider = ({ children }) => {
         return false;
       }
     }
+  };
+
+  // Método para logout, que cambia el token a false
+  const logout = () => {
+    setToken(null);
   };
 
   return (
