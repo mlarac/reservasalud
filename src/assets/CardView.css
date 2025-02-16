@@ -1,0 +1,63 @@
+/* CardView.css */
+
+/* Contenedor principal para las tarjetas */
+.card-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se ajusten en varias filas */
+    justify-content: center; /* Centra las tarjetas en el contenedor */
+    gap: 20px; /* Espacio entre las tarjetas */
+    padding: 20px; /* Espaciado interno del contenedor */
+}
+
+/* Estilo para cada tarjeta */
+.card {
+    display: flex; /* Habilita Flexbox */
+    flex-direction: column; /* Coloca los elementos en columna */
+    justify-content: center; /* Centra verticalmente */
+    align-items: center; /* Centra horizontalmente */
+    background-color: #fff; /* Fondo blanco */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    overflow: hidden; /* Oculta el desbordamiento */
+    width: 300px; /* Ancho fijo para las tarjetas */
+    transition: transform 0.2s; /* Efecto de transición al pasar el mouse */
+}
+
+/* Efecto de hover para las tarjetas */
+.card:hover {
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el mouse */
+}
+
+/* Estilo para la imagen */
+.card img {
+    width: 70%; /* Ajusta el ancho de la imagen */
+    height: auto; /* Mantiene la proporción de la imagen */
+    border-bottom: 2px solid #007BFF; /* Línea de separación debajo de la imagen */
+}
+
+/* Estilo para el nombre */
+.card h2 {
+    font-size: 1.5em; /* Tamaño de fuente */
+    margin: 10px; /* Espacio alrededor del texto */
+    color: #333; /* Color del texto */
+}
+
+/* Estilo para la especialidad */
+.card .especialidad {
+    color: #28A745; /* Color verde para la especialidad */
+    font-weight: bold; /* Negrita */
+    margin: 5px 10px; /* Espaciado alrededor del texto */
+}
+
+/* Estilo para la región */
+.card .region {
+    color: #DC3545; /* Color rojo para la región */
+    font-weight: bold; /* Negrita */
+    margin: 5px 10px; /* Espaciado alrededor del texto */
+}
+
+/* Estilo para el título principal */
+h1 {
+    text-align: center; /* Centra el título */
+    color: #007BFF; /* Color azul para el título */
+}

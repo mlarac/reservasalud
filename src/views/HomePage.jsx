@@ -1,134 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/HomePage.css'; 
+import medicosData from '../assets/medicosData';
 import Slider from 'react-slick';
 import bannerImage1 from '../assets/banner-home-medicina-general-desktop.webp';
 import bannerImage2 from '../assets/banners-home-medicina-general-desktop2.webp';
 import bannerImage3 from '../assets/ImagenBanner3.webp';
 
-// Datos de médicos
-const medicosData = [
-  {
-    nombre: "Dr. Juan Pérez",
-    especialidad: "Medicina General",
-    region: "I Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Ana Gómez",
-    especialidad: "Medicina General",
-    region: "II Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Carlos López",
-    especialidad: "Traumatología",
-    region: "II Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Sofía Rojas",
-    especialidad: "Traumatología",
-    region: "III Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Luis Martínez",
-    especialidad: "Cardiología",
-    region: "IV Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Valentina Torres",
-    especialidad: "Cardiología",
-    region: "V Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Felipe Torres",
-    especialidad: "Neurología",
-    region: "VI Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Camila Fernández",
-    especialidad: "Neurología",
-    region: "VII Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Esteban González",
-    especialidad: "Bronco Pulmonar",
-    region: "VIII Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Isabel Rivas",
-    especialidad: "Bronco Pulmonar",
-    region: "IX Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Andrés Mena",
-    especialidad: "Medicina General",
-    region: "X Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Patricia Salazar",
-    especialidad: "Traumatología",
-    region: "XI Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Ricardo Castillo",
-    especialidad: "Cardiología",
-    region: "XII Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Mariana López",
-    especialidad: "Neurología",
-    region: "XIII Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Nicolás León",
-    especialidad: "Bronco Pulmonar",
-    region: "XIV Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Teresa Ruiz",
-    especialidad: "Medicina General",
-    region: "XV Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Javier Soto",
-    especialidad: "Traumatología",
-    region: "XVI Región",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Sandra Pizarro",
-    especialidad: "Cardiología",
-    region: "Región Metropolitana",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dr. Oscar Alvarado",
-    especialidad: "Neurología",
-    region: "Región Metropolitana",
-    imagen: "https://via.placeholder.com/150",
-  },
-  {
-    nombre: "Dra. Lucia Jara",
-    especialidad: "Bronco Pulmonar",
-    region: "Región Metropolitana",
-    imagen: "https://via.placeholder.com/150",
-  },
-];
+
+
 
 const HomePage = () => {
   const [especialidadId, setEspecialidadId] = useState("");
