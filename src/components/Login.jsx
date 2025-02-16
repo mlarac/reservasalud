@@ -24,7 +24,7 @@ const Login = () => {
   return (
     <Form onSubmit={handleSubmit}>
       {error && <Alert variant="danger">{error}</Alert>}
-      <Form.Group className="mb-3" controlId="formRut">
+      <Form.Group className="mb-4" controlId="formRut">
         <Form.Label>RUT</Form.Label>
         <Form.Control
           type="text"
@@ -32,22 +32,24 @@ const Login = () => {
           onChange={(e) => setRut(e.target.value)}
           placeholder="Ingresa tu RUT"
           required
+          className="py-2"
         />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formPassword">
-        <Form.Label>Password</Form.Label>
+      <Form.Group className="mb-4" controlId="formPassword">
+        <Form.Label>Contraseña</Form.Label>
         <Form.Control
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Ingresa tu contraseña"
           required
+          className="py-2"
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit" className="w-100">
-        Login
+      <Button variant="primary" type="submit" className="w-100 py-2 mt-3">
+        Iniciar Sesión
       </Button>
     </Form>
   );
