@@ -2,22 +2,19 @@ import {createContext, useState, useContext} from 'react';
 
 const AuthContext = createContext();
 
-
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
-  const [rut, setRut] = useState(null);
-  const [name, setName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [role, setRole] = useState(null);
+  const [user, setUser] = useState(null);
 
   const login = async (rut, password) => {
     // Simulacion login API call
     if (rut === '12345678-9' && password === 'password') {
-      setToken('abc123');
-      setRut('12345678-9');
-      setName('John Doe');
-      setEmail('john.doe@example.com');
-      setRole('admin');
+      setUser({
+        token: 'abc123',
+        rut: '12345678-9',
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        role: 'paciente'
+      });
       return true;
     } else {
       try {
@@ -30,11 +27,13 @@ export const AuthProvider = ({ children }) => {
         });
         const data = await response.json();
         if (response.ok) {
-          setToken(data.token);
-          setRut(data.rut);
-          setName(data.name);
-          setEmail(data.email);
-          setRole(data.role);
+          setUser({
+            token: data.token,
+            rut: data.rut,
+            name: data.name,
+            email: data.email,
+            role: data.role
+          });
           return true;
         } else {
           throw new Error('Invalid rut or password');
@@ -46,19 +45,47 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Método para logout, que cambia el token a false
+  const register = async (rut, nombre, email, password) => {
+    // Aquí iría tu lógica de registro
+    try {
+      // Simula una llamada a la API
+      const response = await fetch('api_url/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rut, nombre, email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setUser({
+          token: data.token,
+          rut: data.rut,
+          name: data.nombre,
+          email: data.email,
+          role: data.role || 'paciente' // Asumimos que los nuevos registros son usuarios normales
+        });
+        return true;
+      } else {
+        throw new Error(data.message || 'Error en el registro');
+      }
+    } catch (error) {
+      console.error('Error durante el registro:', error);
+      return false;
+    }
+  };
+
+  // Método para logout, que cambia el user a null
   const logout = () => {
-    setToken(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, email, rut, name, role, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-
 
 export default AuthContext;
 // Hook para consumir el contexto en otros componentes
