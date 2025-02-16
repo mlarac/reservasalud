@@ -1,33 +1,37 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import 'font-awesome/css/font-awesome.min.css';
+import Navbar from './components/Navbar'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import HomePage from './views/HomePage'
+import CardView from './views/CardView'
+import LoginPage from './views/LoginPage'
+import AdminPage from './views/AdminPage'
+import Nosotros from './views/Nosotros'
+import { UsuarioContext } from './context/UsuarioContext'
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Footer from './components/Footer'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { usuario } = useContext(UsuarioContext)
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/cardview/:type/:id" element={<CardView />} />         
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/admin"
+          element={usuario ? <AdminPage /> : <Navigate to="/login" />}
+        />
+      </Routes>      
+      <Footer />
     </>
   )
 }
