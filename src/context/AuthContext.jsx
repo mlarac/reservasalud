@@ -2,10 +2,8 @@ import {createContext, useState, useContext} from 'react';
 
 const AuthContext = createContext();
 
-// Hook para consumir el contexto en otros componentes
-export const useAuth = () => useContext(AuthContext);
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [rut, setRut] = useState(null);
   const [name, setName] = useState(null);
@@ -54,7 +52,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, email, rut, name, role, login }}>
+    <AuthContext.Provider value={{ token, email, rut, name, role, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -62,5 +60,6 @@ const AuthProvider = ({ children }) => {
 
 
 
-export default AuthProvider;
-    
+export default AuthContext;
+// Hook para consumir el contexto en otros componentes
+export const useAuth = () => useContext(AuthContext);

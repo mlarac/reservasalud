@@ -1,15 +1,18 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import LoginView from './views/LoginView';
-// ... other imports
+// ... otras importaciones
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* ... OTRAS RUTAS */}
-        <Route path="/login" element={<LoginView />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* ... otras rutas */}
+          <Route path="/login" element={<LoginView />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
