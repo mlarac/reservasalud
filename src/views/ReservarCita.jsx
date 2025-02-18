@@ -3,11 +3,20 @@ import { Button, Card, Form, Row, Col, Modal } from "react-bootstrap"
 import { toast } from 'react-toastify'
 import ComponenteCalendario from '../components/calendario/Calendario'
 import RUTInput from '../components/forms/RUTInput'
-import { useAuth } from '../context/AuthContext'
 import ToastLayout from '../layouts/ToastLayout'
 import { RUTValidator } from '../utils/rutValidator'
 
+// Profesional predeterminado para pruebas
+const defaultProfesionales = [
+    {
+        id: 1,
+        name: "Dr. Juan Pérez",
+        especialidad: "Medicina General"
+    }
+]
+
 const ReservarCita = () => {
+    // Estados para la información de la reserva
     const [disponibilidad, setDisponibilidad] = useState([])
     const [bloqueSeleccionado, setBloqueSeleccionado] = useState(null)
     const [pacienteInfo, setPacienteInfo] = useState({
@@ -17,26 +26,53 @@ const ReservarCita = () => {
         telefono: ''
     })
     const [showConfirmacion, setShowConfirmacion] = useState(false)
+
+    // Estado para la lista de profesionales y el profesional seleccionado
     const [profesionales, setProfesionales] = useState([])
+    const [profesionalSeleccionado, setProfesionalSeleccionado] = useState(null)
 
-    const { user } = useAuth()
+    // Al recargar o cerrar la pestaña se borran las keys específicas de localStorage
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            localStorage.removeItem('disponibilidades')
+            localStorage.removeItem('configProfesional')
+            localStorage.removeItem('citas')
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+    }, [])
 
+    // Cargar la lista de profesionales desde un JSON local o usar el profesional por defecto
     useEffect(() => {
         const cargarProfesionales = async () => {
             try {
                 const response = await fetch('/profesionales.json')
                 const data = await response.json()
-                setProfesionales(data)
+                if (data && data.length > 0) {
+                    setProfesionales(data)
+                } else {
+                    // Si no hay datos, usamos el profesional predeterminado
+                    setProfesionales(defaultProfesionales)
+                }
             } catch (error) {
-                toast.error("Error cargando profesionales")
+                toast.error("Error cargando profesionales, se usará el profesional por defecto")
+                setProfesionales(defaultProfesionales)
             }
         }
         cargarProfesionales()
     }, [])
 
+    // Opcional: Si deseas que se seleccione automáticamente el primer profesional cargado
+    useEffect(() => {
+        if (profesionales.length > 0 && !profesionalSeleccionado) {
+            setProfesionalSeleccionado(profesionales[0])
+        }
+    }, [profesionales, profesionalSeleccionado])
+
+    // Cargar las disponibilidades filtrando por el profesional seleccionado
     useEffect(() => {
         const cargarDatos = () => {
-            if (!user?.profesionalSeleccionado) {
+            if (!profesionalSeleccionado) {
                 setDisponibilidad([])
                 return
             }
@@ -44,7 +80,7 @@ const ReservarCita = () => {
             const disponibilidades = JSON.parse(localStorage.getItem('disponibilidades') || '[]')
                 .filter(s =>
                     !s.reserved &&
-                    s.profesionalId === user.profesionalSeleccionado.id
+                    s.profesionalId === profesionalSeleccionado.id
                 )
                 .map(s => ({
                     ...s,
@@ -58,12 +94,12 @@ const ReservarCita = () => {
         cargarDatos()
         window.addEventListener('storage', cargarDatos)
         return () => window.removeEventListener('storage', cargarDatos)
-    }, [user?.profesionalSeleccionado])
+    }, [profesionalSeleccionado])
 
     const validarEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
     const reservarCita = () => {
-        if (!bloqueSeleccionado || !user?.profesionalSeleccionado) {
+        if (!bloqueSeleccionado || !profesionalSeleccionado) {
             toast.error('Seleccione un profesional y horario')
             return
         }
@@ -91,7 +127,7 @@ const ReservarCita = () => {
         const nuevaCita = {
             id: Date.now(),
             ...bloqueSeleccionado,
-            profesional: user.profesionalSeleccionado,
+            profesional: profesionalSeleccionado,
             paciente: {
                 ...pacienteInfo,
                 rut: RUTValidator.format(pacienteInfo.rut)
@@ -109,17 +145,19 @@ const ReservarCita = () => {
 
     return (
         <ToastLayout>
-            <div className="container mt-4">
+            <div className="container mt-5">
                 <h2 className="mb-4 text-primary">Reserva de Citas</h2>
 
+                {/* Selección de profesional */}
                 <Card className="mb-4 shadow">
                     <Card.Body>
                         <Form.Group>
                             <Form.Label>Seleccione profesional:</Form.Label>
                             <Form.Select
-                                value={user?.profesionalSeleccionado ? JSON.stringify(user.profesionalSeleccionado) : ""}
+                                value={profesionalSeleccionado ? JSON.stringify(profesionalSeleccionado) : ""}
                                 onChange={(e) => {
-                                    const profesional = e.target.value ? JSON.parse(e.target.value) : null
+                                    const prof = e.target.value ? JSON.parse(e.target.value) : null
+                                    setProfesionalSeleccionado(prof)
                                 }}
                             >
                                 <option value="">-- Seleccione --</option>
@@ -133,11 +171,12 @@ const ReservarCita = () => {
                     </Card.Body>
                 </Card>
 
+                {/* Calendario de disponibilidades */}
                 <Card className="shadow mb-4">
                     <Card.Body>
                         <ComponenteCalendario
                             eventos={disponibilidad}
-                            seleccionable={!!user?.profesionalSeleccionado}
+                            seleccionable={!!profesionalSeleccionado}
                             onSelectEvent={setBloqueSeleccionado}
                             eventPropGetter={(evento) => ({
                                 style: {
@@ -149,6 +188,7 @@ const ReservarCita = () => {
                     </Card.Body>
                 </Card>
 
+                {/* Formulario para datos del paciente (visible cuando se selecciona un bloque) */}
                 {bloqueSeleccionado && (
                     <Card className="border-primary mb-4">
                         <Card.Body>
@@ -210,6 +250,7 @@ const ReservarCita = () => {
                     </Card>
                 )}
 
+                {/* Modal de confirmación */}
                 <Modal show={showConfirmacion} onHide={() => setShowConfirmacion(false)} centered>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirmar Reserva</Modal.Title>
@@ -217,9 +258,13 @@ const ReservarCita = () => {
                     <Modal.Body>
                         <h5>Detalles de la Reserva</h5>
                         <div className="mt-3">
-                            <p><strong>Profesional:</strong> {user?.profesionalSeleccionado?.name}</p>
-                            <p><strong>Fecha:</strong> {bloqueSeleccionado?.start?.toLocaleDateString()}</p>
-                            <p><strong>Horario:</strong> {bloqueSeleccionado?.start?.toLocaleTimeString()} - {bloqueSeleccionado?.end?.toLocaleTimeString()}</p>
+                            <p><strong>Profesional:</strong> {profesionalSeleccionado?.name}</p>
+                            <p>
+                                <strong>Fecha:</strong> {bloqueSeleccionado?.start?.toLocaleDateString()}
+                            </p>
+                            <p>
+                                <strong>Horario:</strong> {bloqueSeleccionado?.start?.toLocaleTimeString()} - {bloqueSeleccionado?.end?.toLocaleTimeString()}
+                            </p>
                             <div className="mt-4">
                                 <h6>Datos del Paciente:</h6>
                                 <p>RUT: {RUTValidator.format(pacienteInfo.rut)}</p>

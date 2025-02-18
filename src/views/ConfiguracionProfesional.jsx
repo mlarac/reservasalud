@@ -1,22 +1,45 @@
 import { useState, useEffect } from 'react'
 import { Button, Form, ListGroup, Modal } from 'react-bootstrap'
 
+/**
+ * NOTAS:
+ * - Define y guarda "tiposCita" en localStorage.
+ * - Añade "beforeunload" para limpiar la info al recargar/cerrar pestaña.
+ */
 const ConfiguracionProfesional = () => {
     const [tiposCita, setTiposCita] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [nuevoTipo, setNuevoTipo] = useState({ nombre: '', duracion: 15 })
 
+    // Borra la data de localStorage al recargar/cerrar
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            localStorage.removeItem('disponibilidades')
+            localStorage.removeItem('configProfesional')
+            localStorage.removeItem('citas')
+        }
+
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+    }, [])
+
+    // Cargar tipos de cita iniciales
     useEffect(() => {
         const config = JSON.parse(localStorage.getItem('configProfesional')) || { tiposCita: [] }
         setTiposCita(config.tiposCita)
     }, [])
 
+    // Guardar en localStorage cuando cambia "tiposCita"
     useEffect(() => {
-        if (tiposCita.length > 0 || localStorage.getItem('configProfesional')) {
+        if (tiposCita.length > 0) {
             localStorage.setItem('configProfesional', JSON.stringify({ tiposCita }))
+        } else {
+            // Si no hay tipos, borra la key para no dejar objetos vacíos
+            localStorage.removeItem('configProfesional')
         }
     }, [tiposCita])
 
+    // Agregar un nuevo tipo de cita
     const handleAgregarTipo = () => {
         if (!nuevoTipo.nombre.trim()) return
 
@@ -25,12 +48,13 @@ const ConfiguracionProfesional = () => {
         setNuevoTipo({ nombre: '', duracion: 15 })
     }
 
+    // Eliminar tipo de cita
     const handleEliminarTipo = (id) => {
         setTiposCita(prev => prev.filter(tipo => tipo.id !== id))
     }
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-5">
             <h2 className="mb-4">⚙ Configuración Profesional</h2>
 
             <Button

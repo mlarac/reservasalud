@@ -3,10 +3,17 @@ import { Button, Card, Modal } from "react-bootstrap"
 import { toast } from "react-toastify"
 import ComponenteCalendario from "../components/calendario/Calendario"
 import TimeSlotForm from "../components/forms/TimeSlotForm"
-import { useAuth } from "../context/AuthContext"
 import ToastLayout from "../layouts/ToastLayout"
 
+/**
+ * NOTAS:
+ * - Se define un "user" local para simular el ID del profesional.
+ * - Se añade un "beforeunload" para borrar localStorage al recargar/cerrar pestaña.
+ */
 const GestionDisponibilidad = () => {
+    // Simulamos un "usuario" profesional con ID=1
+    const user = { id: 1, name: "John Doe" }
+
     const [disponibilidad, setDisponibilidad] = useState([])
     const [nuevoBloque, setNuevoBloque] = useState(null)
     const [tiposCita, setTiposCita] = useState([])
@@ -17,32 +24,45 @@ const GestionDisponibilidad = () => {
     const [horaFin, setHoraFin] = useState("17:00")
     const [showModal, setShowModal] = useState(false)
 
-    const { user } = useAuth()
+    // Borra la data de localStorage al recargar/cerrar
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            localStorage.removeItem('disponibilidades')
+            localStorage.removeItem('configProfesional')
+            localStorage.removeItem('citas')
+        }
 
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+    }, [])
+
+    // Cargar datos desde localStorage
     useEffect(() => {
         const cargarDatos = () => {
+            // Cargamos tipos de cita de "configProfesional"
             const config = JSON.parse(localStorage.getItem('configProfesional')) || { tiposCita: [] }
             setTiposCita(config.tiposCita)
 
+            // Cargamos disponibilidades filtradas por user.id y que NO estén reservadas
             const disponibilidades = JSON.parse(localStorage.getItem("disponibilidades") || "[]")
-                .filter(bloque =>
-                    !bloque.reserved &&
-                    bloque.profesionalId === user?.id
-                )
+                .filter(bloque => !bloque.reserved && bloque.profesionalId === user.id)
                 .map(bloque => ({
                     ...bloque,
                     start: new Date(bloque.start),
                     end: new Date(bloque.end),
                     title: `Disponible - ${bloque.tipo}`
                 }))
+
             setDisponibilidad(disponibilidades)
         }
 
         cargarDatos()
+        // Permite actualizar la disponibilidad si se cambia en otra pestaña
         window.addEventListener("storage", cargarDatos)
         return () => window.removeEventListener("storage", cargarDatos)
-    }, [user])
+    }, [user.id])
 
+    // Al hacer clic en un día del calendario
     const manejarSeleccionDia = ({ start }) => {
         if (!selectedTipo) {
             toast.error("¡Primero seleccione un tipo de cita!")
@@ -51,8 +71,9 @@ const GestionDisponibilidad = () => {
         setSelectedDate(start)
     }
 
+    // Generar "slots" de disponibilidad
     const generarSlots = () => {
-        if (!selectedTipo || !selectedDate || !user) return
+        if (!selectedTipo || !selectedDate) return
 
         const fechaInicio = new Date(selectedDate)
         const [horaIni, minIni] = horaInicio.split(':').map(Number)
@@ -98,17 +119,21 @@ const GestionDisponibilidad = () => {
         setShowModal(true)
     }
 
+    // Confirmar y guardar en localStorage
     const agregarBloque = () => {
         const existentes = JSON.parse(localStorage.getItem("disponibilidades") || "[]")
         const nuevasDisponibilidades = [...existentes, ...nuevosSlots]
-        localStorage.setItem("disponibilidades", JSON.stringify(nuevasDisponibilidades))
-        window.dispatchEvent(new Event('storage'))
 
+        localStorage.setItem("disponibilidades", JSON.stringify(nuevasDisponibilidades))
+        window.dispatchEvent(new Event('storage')) // Sincroniza con otras pestañas
+
+        // Actualizar state local
         setDisponibilidad(nuevasDisponibilidades.map(bloque => ({
             ...bloque,
             start: new Date(bloque.start),
             end: new Date(bloque.end)
         })))
+
         setShowModal(false)
         setNuevosSlots([])
         setSelectedDate(null)
@@ -117,7 +142,7 @@ const GestionDisponibilidad = () => {
 
     return (
         <ToastLayout>
-            <div className="container mt-4">
+            <div className="container mt-5">
                 <h2 className="mb-4 text-primary">Gestión de Disponibilidad</h2>
 
                 <Card className="mb-4 shadow">
@@ -140,11 +165,11 @@ const GestionDisponibilidad = () => {
                     <Card.Body>
                         <ComponenteCalendario
                             eventos={disponibilidad}
-                            seleccionable={!!selectedTipo}
+                            seleccionable={!!selectedTipo} // solo seleccionable si hay un tipo de cita seleccionado
                             onSelectSlot={manejarSeleccionDia}
                             eventPropGetter={(evento) => ({
                                 style: {
-                                    backgroundColor: evento.reserved ? "#dc3545" : "#198754",
+                                    backgroundColor: evento.reserved ? "#dc3545" : "#0d6efd",
                                     color: "white",
                                 }
                             })}
