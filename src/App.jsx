@@ -9,7 +9,8 @@ import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import HomePage from './views/Home';
 import Nosotros from './views/Nosotros';
-import IntranetPage from './views/IntranetPage'; // <-- Importa la nueva vista
+import IntranetPage from './views/IntranetPage';
+import CardView from './components/CardView'; 
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -37,6 +38,8 @@ function App() {
               <Route path="/gestion-disponibilidad" element={<GestionDisponibilidad />} />
               <Route path="/reservar-cita" element={<ReservarCita />} />
               <Route path='/nosotros' element={<Nosotros />} />
+              <Route path="/cardview/:type/:id" element={<CardView />} />
+
             </Routes>
           </main>
 
