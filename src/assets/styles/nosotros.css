@@ -1,0 +1,54 @@
+/* Nosotros.css */
+.carousel-container {
+    display: flexbox;
+    align-items: center;
+    border: 2px;
+    border-color: black;
+    margin-top: 4rem;
+    /* Espacio superior */
+}
+
+.nosotros-carousel-image {
+    align-items: center;
+    width: 80%;
+    /* Asegúrate de que la imagen ocupe todo el ancho del contenedor */
+    height: auto;
+    /* Mantiene la proporción de la imagen */
+    border-radius: 8px;
+    /* Bordes redondeados */
+    object-fit: cover;
+}
+
+.nosotros-container {
+
+    align-items: center;
+    padding: 3rem;
+    background-color: #e7f7f7;
+    /* Fondo diferente para distinguir */
+}
+
+.nosotros-card-container {
+    align-items: center;
+    border: .3rem solid #4CAF50;
+    /* Borde verde */
+    border-radius: 15px;
+    /* Bordes redondeados */
+    padding: 2rem;
+    /* Espaciado interno */
+    margin: 2rem;
+    /* Espaciado externo */
+    background-color: white;
+    /* Fondo blanco para la tarjeta */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Sombra para el efecto de tarjeta */
+}
+
+h1 {
+    color: #41CC65;
+    text-align: center;
+}
+
+p {
+    margin: 10px 0;
+    /* Espacio entre párrafos */
+}
