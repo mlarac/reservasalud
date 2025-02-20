@@ -1,0 +1,123 @@
+const medicosData = [
+    {
+        nombre: "Dr. Juan Pérez",
+        especialidad: "Medicina General",
+        region: "I Región",
+        imagen: "https://ochsner-craft.s3.amazonaws.com/imager/wwwdoctors/4408779/perez-juan-1821106261-e006f118a4.jpg",
+    },
+    {
+        nombre: "Dra. Ana Gómez",
+        especialidad: "Medicina General",
+        region: "II Región",
+        imagen: "https://www.shutterstock.com/shutterstock/videos/25541597/thumb/1.jpg?ip=x480",
+    },
+    {
+        nombre: "Dr. Carlos López",
+        especialidad: "Traumatología",
+        region: "II Región",
+        imagen: "https://www.shutterstock.com/image-photo/portrait-old-male-doctor-stethoscope-260nw-44805874.jpg",
+    },
+    {
+        nombre: "Dra. Sofía Rojas",
+        especialidad: "Traumatología",
+        region: "III Región",
+        imagen: "https://s3.sa-east-1.amazonaws.com/doctoralia.cl/doctor/7522aa/7522aaee51531b2a29f0f94cd6572363_large.jpg",
+    },
+    {
+        nombre: "Dr. Luis Martínez",
+        especialidad: "Cardiología",
+        region: "IV Región",
+        imagen: "https://img.freepik.com/foto-gratis/anciano-doctor-usando-tableta-tomando-notas_23-2147896142.jpg?semt=ais_hybrid",
+    },
+    {
+        nombre: "Dra. Valentina Torres",
+        especialidad: "Cardiología",
+        region: "V Región",
+        imagen: "https://s3.sa-east-1.amazonaws.com/doctoralia.cl/doctor/7522aa/7522aaee51531b2a29f0f94cd6572363_large.jpg",
+    },
+    {
+        nombre: "Dr. Felipe Torres",
+        especialidad: "Neurología",
+        region: "VI Región",
+        imagen: "https://img.freepik.com/foto-gratis/anciano-doctor-usando-tableta-tomando-notas_23-2147896142.jpg?semt=ais_hybrid",
+    },
+    {
+        nombre: "Dra. Camila Fernández",
+        especialidad: "Neurología",
+        region: "VII Región",
+        imagen: "https://s3.sa-east-1.amazonaws.com/doctoralia.cl/doctor/7522aa/7522aaee51531b2a29f0f94cd6572363_large.jpg",
+    },
+    {
+        nombre: "Dr. Esteban González",
+        especialidad: "Bronco Pulmonar",
+        region: "VIII Región",
+        imagen: "https://img.freepik.com/foto-gratis/anciano-doctor-usando-tableta-tomando-notas_23-2147896142.jpg?semt=ais_hybrid",
+    },
+    {
+        nombre: "Dra. Isabel Rivas",
+        especialidad: "Bronco Pulmonar",
+        region: "IX Región",
+        imagen: "https://s3.sa-east-1.amazonaws.com/doctoralia.cl/doctor/7522aa/7522aaee51531b2a29f0f94cd6572363_large.jpg",
+    },
+    {
+        nombre: "Dr. Andrés Mena",
+        especialidad: "Medicina General",
+        region: "X Región",
+        imagen: "https://img.freepik.com/foto-gratis/cerrar-doctor-preparandose-trabajo_23-2149152486.jpg",
+    },
+    {
+        nombre: "Dra. Patricia Salazar",
+        especialidad: "Traumatología",
+        region: "XI Región",
+        imagen: "https://s3.sa-east-1.amazonaws.com/doctoralia.cl/doctor/7522aa/7522aaee51531b2a29f0f94cd6572363_large.jpg",
+    },
+    {
+        nombre: "Dr. Ricardo Castillo",
+        especialidad: "Cardiología",
+        region: "XII Región",
+        imagen: "https://img.freepik.com/foto-gratis/anciano-doctor-usando-tableta-tomando-notas_23-2147896142.jpg?semt=ais_hybrid",
+    },
+    {
+        nombre: "Dra. Mariana López",
+        especialidad: "Neurología",
+        region: "XIII Región",
+        imagen: "https://s3.sa-east-1.amazonaws.com/doctoralia.cl/doctor/7522aa/7522aaee51531b2a29f0f94cd6572363_large.jpg",
+    },
+    {
+        nombre: "Dr. Nicolás León",
+        especialidad: "Bronco Pulmonar",
+        region: "XIV Región",
+        imagen: "https://img.freepik.com/foto-gratis/anciano-doctor-usando-tableta-tomando-notas_23-2147896142.jpg?semt=ais_hybrid",
+    },
+    {
+        nombre: "Dra. Teresa Ruiz",
+        especialidad: "Medicina General",
+        region: "XV Región",
+        imagen: "https://previews.123rf.com/images/stylephotographs/stylephotographs1103/stylephotographs110300128/9108678-doctora-anciano-rega%C3%B1os-con-su-dedo-%C3%ADndice.jpg",
+    },
+    {
+        nombre: "Dr. Javier Soto",
+        especialidad: "Traumatología",
+        region: "XVI Región",
+        imagen: "https://img.freepik.com/foto-gratis/anciano-doctor-usando-tableta-tomando-notas_23-2147896142.jpg?semt=ais_hybrid",
+    },
+    {
+        nombre: "Dra. Sandra Pizarro",
+        especialidad: "Cardiología",
+        region: "Región Metropolitana",
+        imagen: "https://s3.sa-east-1.amazonaws.com/doctoralia.cl/doctor/7522aa/7522aaee51531b2a29f0f94cd6572363_large.jpg",
+    },
+    {
+        nombre: "Dr. Oscar Alvarado",
+        especialidad: "Neurología",
+        region: "Región Metropolitana",
+        imagen: "https://img.freepik.com/foto-gratis/anciano-doctor-usando-tableta-tomando-notas_23-2147896142.jpg?semt=ais_hybrid",
+    },
+    {
+        nombre: "Dra. Lucia Jara",
+        especialidad: "Bronco Pulmonar",
+        region: "Región Metropolitana",
+        imagen: "https://www.meds.cl/wp-content/uploads/CLAUDIA-ALBORNOZ.jpg.webp",
+    },
+];
+export default medicosData;
