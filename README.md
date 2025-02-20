@@ -1,8 +1,27 @@
-# React + Vite
+# ReservaSalud
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ReservaSalud es una aplicación web para la gestión y reserva de citas médicas. Permite a los usuarios buscar especialistas, reservar citas y a los profesionales de la salud gestionar su disponibilidad.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Búsqueda de especialistas por nombre, especialidad o región
+- Sistema de autenticación para usuarios y profesionales
+- Gestión de disponibilidad para profesionales de la salud
+- Reserva de citas médicas
+- Interfaz de usuario intuitiva y responsive
+
+## Tecnologías Utilizadas
+
+- React
+- React Router para la navegación
+- Context API para la gestión del estado de autenticación
+- React Bootstrap para el diseño de la interfaz
+- Slick Carousel para componentes de carrusel
+
+## Estructura del Proyecto
+
+- `src/`
+  - `components/`: Componentes reutilizables (Navbar, Footer, CardView, etc.)
+  - `context/`: Contextos de React (AuthContext)
+  - `views/`: Componentes de página principales
+  - `assets/`: Recursos estáticos (imágenes, estilos, datos)
