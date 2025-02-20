@@ -1,11 +1,170 @@
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
-#root {
-  display: flex;
-  flex-direction: column;
+main {
+  margin-top: 36px;
+}
+
+.btn-custom-green {
+  background-color: #369e52 !important;
+  border-color: #369e52 !important;
+  color: #fff !important;
+}
+
+/* Sobreescribe estilos de Bootstrap */
+.custom-navbar {
+  background-color: #67E0C8 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+}
+
+.nav-link {
+  color: #2A6157 !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  transform: translateY(-2px);
+}
+
+.nav-link.active {
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+}
+
+/* Ajustes responsive */
+@media (max-width: 992px) {
+  .custom-navbar .navbar-collapse {
+    background-color: #67E0C8;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 10px;
+  }
+
+  .custom-navbar .nav-link {
+    justify-content: center;
+    padding: 10px;
+  }
+}
+
+/* Estilos generales del footer */
+footer.footer-custom {
+  background-color: #4ECDBE !important;
+  padding: 20px 0;
+  color: white;
+}
+
+/* Contenedor principal */
+footer .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Textos del footer */
+footer .brand-text,
+footer .rights-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Enlaces de redes sociales */
+footer .social-link {
+  color: white !important;
+  margin: 0 12px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+footer .social-link:hover {
+  transform: translateY(-3px);
+  opacity: 0.9;
+}
+
+footer .social-link i {
+  font-size: 1.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  footer .row>div {
+    margin-bottom: 1.5rem;
+  }
+
+  footer .social-link {
+    margin: 0 8px;
+  }
+
+  footer .social-link i {
+    font-size: 1.5rem;
+  }
+
+  footer .brand-text,
+  footer .rights-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  footer .social-link {
+    display: inline-block;
+    margin: 0 6px;
+  }
+
+  footer .social-link i {
+    font-size: 1.3rem;
+  }
+}
+
+/* Ajustes para el carrusel */
+.slick-prev,
+.slick-next {
+  width: 40px;
+  height: 40px;
+  z-index: 1;
+}
+
+.slick-prev {
+  left: 20px !important;
+}
+
+.slick-next {
+  right: 20px !important;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: #41CC65 !important;
+  font-size: 40px !important;
+}
+
+.slick-dots li button:before {
+  color: #41CC65 !important;
+  font-size: 12px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+  .slick-prev:before,
+  .slick-next:before {
+    font-size: 30px !important;
+  }
+
+  .carousel-image {
+    height: 300px !important;
+  }
+
+  .border-success {
+    border-width: 2px !important;
+  }
+
+  .fs-5 {
+    font-size: 1rem !important;
+  }
 }
