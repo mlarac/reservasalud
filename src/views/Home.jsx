@@ -1,10 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Slider from 'react-slick';
-
 import '../assets/styles/home.css';
-import medicosData from '../assets/medicosData';
 
 import bannerImage1 from '../assets/img/banner-home-medicina-general-desktop.webp';
 import bannerImage2 from '../assets/img/banners-home-medicina-general-desktop2.webp';
@@ -14,7 +12,23 @@ const HomePage = () => {
   const [especialidadId, setEspecialidadId] = useState("");
   const [nombreId, setNombreId] = useState("");
   const [regionId, setRegionId] = useState("");
+  const [profesionales, setProfesionales] = useState([]); // Nuevo estado para profesionales
   const navigate = useNavigate();
+
+  // Cargar datos desde profesionales.json
+  useEffect(() => {
+    const cargarProfesionales = async () => {
+      try {
+        const response = await fetch('/profesionales.json');
+        const data = await response.json();
+        setProfesionales(data); // Establece los datos en el estado
+      } catch (error) {
+        console.error("Error al cargar los profesionales:", error);
+      }
+    };
+
+    cargarProfesionales();
+  }, []);
 
   const buscarPorEspecialidad = () => {
     if (especialidadId === "") {
@@ -51,10 +65,10 @@ const HomePage = () => {
     autoplaySpeed: 500,
   };
 
-  // Datos de especialidades, nombres y regiones
-  const especialidades = [...new Set(medicosData.map(m => m.especialidad))];
-  const nombres = medicosData.map(m => m.nombre);
-  const regiones = [...new Set(medicosData.map(m => m.region))];
+  // Datos de especialidades, nombres y regiones desde profesionales
+  const especialidades = [...new Set(profesionales.map(m => m.especialidad))];
+  const nombres = profesionales.map(m => m.nombre);
+  const regiones = [...new Set(profesionales.map(m => m.region))];
 
   return (
     <main className="container mt-5 pt-5">

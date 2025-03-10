@@ -1,22 +1,41 @@
 import '../assets/styles/cardView.css';
-import { useParams } from 'react-router-dom';
-import medicosData from '../assets/medicosData'; 
-// Datos de médicos
-
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'; // Cambiado aquí
 
 const CardView = () => {
   const { type, id } = useParams();
-  let filteredMedicos = [];
-   console.log('llegue aca' , type,id);
-  if (type === "especialidad") {
-    filteredMedicos = medicosData.filter(medico => medico.especialidad === id);
-  } else if (type === "nombre") {
-    filteredMedicos = medicosData.filter(medico => medico.nombre === id);
-  } else if (type === "region") {
-    filteredMedicos = medicosData.filter(medico => medico.region === id);
-  }
+  const navigate = useNavigate(); // Cambiado aquí
+  const [filteredMedicos, setFilteredMedicos] = useState([]);
+
+  useEffect(() => {
+    const cargarProfesionales = async () => {
+      try {
+        const response = await fetch('/profesionales.json'); // Carga el JSON desde la carpeta public
+        const data = await response.json();
+
+        let medicos = [];
+        if (type === "especialidad") {
+          medicos = data.filter(medico => medico.especialidad === id);
+        } else if (type === "nombre") {
+          medicos = data.filter(medico => medico.nombre === id);
+        } else if (type === "region") {
+          medicos = data.filter(medico => medico.region === id);
+        }
+
+        setFilteredMedicos(medicos);
+      } catch (error) {
+        console.error("Error al cargar los profesionales:", error);
+      }
+    };
+
+    cargarProfesionales();
+  }, [type, id]);
 
   const title = type === "especialidad" ? id : type === "nombre" ? id : id;
+
+  const handleReservarCita = (medico) => {
+    navigate(`/reservar-cita?medicoId=${medico.id}`); // Cambiado aquí
+  };
 
   return (
     <div>
@@ -29,6 +48,9 @@ const CardView = () => {
               <h2>{medico.nombre}</h2>
               <p>Especialidad: {medico.especialidad}</p>
               <p>Región: {medico.region}</p>
+              <button onClick={() => handleReservarCita(medico)}>
+                Reservar Cita
+              </button>
             </div>
           ))
         ) : (

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Card, Form, Row, Col, Modal } from "react-bootstrap"
-import { toast } from 'react-toastify'
-import ComponenteCalendario from '../components/calendario/Calendario'
-import RUTInput from '../components/forms/RUTInput'
-import ToastLayout from '../layouts/ToastLayout'
-import { RUTValidator } from '../utils/rutValidator'
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Form, Row, Col, Modal } from "react-bootstrap";
+import { toast } from 'react-toastify';
+import ComponenteCalendario from '../components/calendario/Calendario';
+import RUTInput from '../components/forms/RUTInput';
+import ToastLayout from '../layouts/ToastLayout';
+import { RUTValidator } from '../utils/rutValidator';
 
 // Profesional predeterminado para pruebas
 const defaultProfesionales = [
@@ -13,116 +13,112 @@ const defaultProfesionales = [
         name: "Dr. Juan Pérez",
         especialidad: "Medicina General"
     }
-]
+];
 
 const ReservarCita = () => {
     // Estados para la información de la reserva
-    const [disponibilidad, setDisponibilidad] = useState([])
-    const [bloqueSeleccionado, setBloqueSeleccionado] = useState(null)
+    const [disponibilidad, setDisponibilidad] = useState([]);
+    const [bloqueSeleccionado, setBloqueSeleccionado] = useState(null);
     const [pacienteInfo, setPacienteInfo] = useState({
         rut: '',
         nombre: '',
         email: '',
         telefono: ''
-    })
-    const [showConfirmacion, setShowConfirmacion] = useState(false)
+    });
+    const [showConfirmacion, setShowConfirmacion] = useState(false);
 
     // Estado para la lista de profesionales y el profesional seleccionado
-    const [profesionales, setProfesionales] = useState([])
-    const [profesionalSeleccionado, setProfesionalSeleccionado] = useState(null)
+    const [profesionales, setProfesionales] = useState([]);
+    const [profesionalSeleccionado, setProfesionalSeleccionado] = useState(null);
 
     // Al recargar o cerrar la pestaña se borran las keys específicas de localStorage
     useEffect(() => {
         const handleBeforeUnload = () => {
-            localStorage.removeItem('disponibilidades')
-            localStorage.removeItem('configProfesional')
-            localStorage.removeItem('citas')
+            localStorage.removeItem('disponibilidades');
+            localStorage.removeItem('configProfesional');
+            localStorage.removeItem('citas');
         }
-        window.addEventListener('beforeunload', handleBeforeUnload)
-        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-    }, [])
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, []);
 
     // Cargar la lista de profesionales desde un JSON local o usar el profesional por defecto
     useEffect(() => {
         const cargarProfesionales = async () => {
             try {
-                const response = await fetch('/profesionales.json')
-                const data = await response.json()
-                if (data && data.length > 0) {
-                    setProfesionales(data)
-                } else {
-                    // Si no hay datos, usamos el profesional predeterminado
-                    setProfesionales(defaultProfesionales)
-                }
+                const response = await fetch('/profesionales.json');
+                const data = await response.json();
+                // Asegúrate de que los datos sean únicos y no estén duplicados
+                const profesionalesUnicos = Array.from(new Set(data.map(p => p.id)))
+                    .map(id => data.find(p => p.id === id));
+
+                setProfesionales(profesionalesUnicos.length > 0 ? profesionalesUnicos : defaultProfesionales);
             } catch (error) {
-                toast.error("Error cargando profesionales, se usará el profesional por defecto")
-                setProfesionales(defaultProfesionales)
+                toast.error("Error cargando profesionales, se usará el profesional por defecto");
+                setProfesionales(defaultProfesionales);
             }
-        }
-        cargarProfesionales()
-    }, [])
+        };
+        cargarProfesionales();
+    }, []);
 
     // Opcional: Si deseas que se seleccione automáticamente el primer profesional cargado
     useEffect(() => {
         if (profesionales.length > 0 && !profesionalSeleccionado) {
-            setProfesionalSeleccionado(profesionales[0])
+            setProfesionalSeleccionado(profesionales[0]);
         }
-    }, [profesionales, profesionalSeleccionado])
+    }, [profesionales, profesionalSeleccionado]);
 
     // Cargar las disponibilidades filtrando por el profesional seleccionado
     useEffect(() => {
         const cargarDatos = () => {
             if (!profesionalSeleccionado) {
-                setDisponibilidad([])
-                return
+                setDisponibilidad([]);
+                return;
             }
 
             const disponibilidades = JSON.parse(localStorage.getItem('disponibilidades') || '[]')
-                .filter(s =>
-                    !s.reserved &&
-                    s.profesionalId === profesionalSeleccionado.id
-                )
+                .filter(s => !s.reserved && s.profesionalId === profesionalSeleccionado.id)
                 .map(s => ({
                     ...s,
                     start: new Date(s.start),
                     end: new Date(s.end),
                     title: `Disponible - ${s.tipo}`
-                }))
-            setDisponibilidad(disponibilidades)
-        }
+                }));
+            setDisponibilidad(disponibilidades);
+        };
 
-        cargarDatos()
-        window.addEventListener('storage', cargarDatos)
-        return () => window.removeEventListener('storage', cargarDatos)
-    }, [profesionalSeleccionado])
+        cargarDatos();
+        window.addEventListener('storage', cargarDatos);
+        return () => window.removeEventListener('storage', cargarDatos);
+    }, [profesionalSeleccionado]);
 
-    const validarEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    const validarEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     const reservarCita = () => {
         if (!bloqueSeleccionado || !profesionalSeleccionado) {
-            toast.error('Seleccione un profesional y horario')
-            return
+            toast.error('Seleccione un profesional y horario');
+            return;
         }
 
         if (!RUTValidator.validate(pacienteInfo.rut)) {
-            toast.error('RUT inválido')
-            return
+            toast.error('RUT inválido');
+            return;
         }
 
         if (!pacienteInfo.nombre.trim()) {
-            toast.error('Nombre obligatorio')
-            return
+            toast.error('Nombre obligatorio');
+            return;
         }
 
         if (!validarEmail(pacienteInfo.email)) {
-            toast.error('Email inválido')
-            return
+            toast.error('Email inválido');
+            return;
         }
 
         const nuevasDisponibilidades = JSON.parse(localStorage.getItem('disponibilidades') || '[]')
-            .map(item => item.id === bloqueSeleccionado.id ? { ...item, reserved: true } : item)
+            .map(item => item.id === bloqueSeleccionado.id ? { ...item, reserved: true } : item);
 
-        localStorage.setItem('disponibilidades', JSON.stringify(nuevasDisponibilidades))
+        localStorage.setItem('disponibilidades', JSON.stringify(nuevasDisponibilidades));
 
         const nuevaCita = {
             id: Date.now(),
@@ -132,16 +128,16 @@ const ReservarCita = () => {
                 ...pacienteInfo,
                 rut: RUTValidator.format(pacienteInfo.rut)
             }
-        }
+        };
 
-        const citas = JSON.parse(localStorage.getItem('citas') || '[]')
-        localStorage.setItem('citas', JSON.stringify([...citas, nuevaCita]))
+        const citas = JSON.parse(localStorage.getItem('citas') || '[]');
+        localStorage.setItem('citas', JSON.stringify([...citas, nuevaCita]));
 
-        toast.success('✅ Cita reservada!')
-        setShowConfirmacion(false)
-        setBloqueSeleccionado(null)
-        setPacienteInfo({ rut: '', nombre: '', email: '', telefono: '' })
-    }
+        toast.success('✅ Cita reservada!');
+        setShowConfirmacion(false);
+        setBloqueSeleccionado(null);
+        setPacienteInfo({ rut: '', nombre: '', email: '', telefono: '' });
+    };
 
     return (
         <ToastLayout>
@@ -156,8 +152,8 @@ const ReservarCita = () => {
                             <Form.Select
                                 value={profesionalSeleccionado ? JSON.stringify(profesionalSeleccionado) : ""}
                                 onChange={(e) => {
-                                    const prof = e.target.value ? JSON.parse(e.target.value) : null
-                                    setProfesionalSeleccionado(prof)
+                                    const prof = e.target.value ? JSON.parse(e.target.value) : null;
+                                    setProfesionalSeleccionado(prof);
                                 }}
                             >
                                 <option value="">-- Seleccione --</option>
@@ -285,7 +281,7 @@ const ReservarCita = () => {
                 </Modal>
             </div>
         </ToastLayout>
-    )
+    );
 }
 
-export default ReservarCita
+export default ReservarCita;
