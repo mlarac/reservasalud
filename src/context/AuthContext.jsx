@@ -2,60 +2,50 @@ import {createContext, useState, useContext} from 'react';
 
 const AuthContext = createContext();
 
+const API_URL = 'http://localhost:3000/api/auth';
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const login = async (rut, password) => {
-    // Simulacion login API call
-    if (rut === '12345678-9' && password === 'password') {
-      setUser({
-        token: 'abc123',
-        rut: '12345678-9',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        role: 'paciente'
-      });
-      return true;
-    } else {
-      try {
-        const response = await fetch('api_url', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ rut, password }),
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setUser({
-            token: data.token,
-            rut: data.rut,
-            name: data.name,
-            email: data.email,
-            role: data.role
-          });
-          return true;
-        } else {
-          throw new Error('Invalid rut or password');
-        }
-      } catch (error) {
-        console.error('Error during login:', error);
-        return false;
-      }
-    }
-  };
-
-  const register = async (rut, nombre, email, password) => {
-    // Aquí iría tu lógica de registro
     try {
-      // Simula una llamada a la API
-      const response = await fetch('api_url/register', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ rut, nombre, email, password }),
+        body: JSON.stringify({ rut, password }),
       });
+      const data = await response.json();
+      if (response.ok) {
+        setUser({
+          token: data.token,
+          rut: data.rut,
+          name: data.name,
+          email: data.email,
+          role: data.role
+        });
+        return true;
+      } else {
+        throw new Error(data.message || 'Invalid rut or password');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      return false;
+    }
+  };
+
+  const register = async (rut, nombre, email, password) => {
+    try {
+      const response = await fetch(`${API_URL}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rut, nombre, email, password, role: 'paciente' }),
+      });
+      console.log('Register request:', { rut, nombre, email, password });
+
       const data = await response.json();
       if (response.ok) {
         setUser({
@@ -63,7 +53,7 @@ export const AuthProvider = ({ children }) => {
           rut: data.rut,
           name: data.nombre,
           email: data.email,
-          role: data.role || 'paciente' // Asumimos que los nuevos registros son usuarios normales
+          role:  data.role || 'paciente' // Asumimos que los nuevos registros son usuarios normales
         });
         return true;
       } else {
@@ -75,7 +65,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Método para logout, que cambia el user a null
   const logout = () => {
     setUser(null);
   };
@@ -88,5 +77,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export default AuthContext;
-// Hook para consumir el contexto en otros componentes
 export const useAuth = () => useContext(AuthContext);
