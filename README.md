@@ -1,4 +1,4 @@
-# Nombre del Proyecto
+# Reserva Salud
 
 La plataforma es una aplicación web diseñada para facilitar el agendamiento de horas médicas de manera eficiente y accesible tanto para pacientes como para profesionales de la salud. Con una interfaz intuitiva y funcionalidades robustas, el objetivo es mejorar la experiencia de gestión de citas médicas, reduciendo el tiempo de espera y optimizando la organización de los horarios de atención.
 
